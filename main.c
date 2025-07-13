@@ -1,7 +1,6 @@
 #include "projTypes.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "Converters.h"
 
 void arg_handler(char* argv[], int argc);
 
