@@ -7,6 +7,7 @@
 typedef double JulianDay;
 typedef int64_t TimeStamp;
 
+#pragma pack(1)
 typedef struct {
 	// GREGORIAN CALENDAR
 	int64_t GREG_YEAR;
@@ -18,6 +19,11 @@ typedef struct {
 	uint8_t JULIAN_MONTH;
 	uint8_t JULIAN_DAY;
 
+	// HIJRI CALENDAR
+	int64_t HIJRI_YEAR;
+	uint8_t HIJRI_MONTH;
+	uint8_t HIJRI_DAY;
+
 	// TIME OF THE DAY
 	uint8_t HOUR;
 	uint8_t MINUTE;
@@ -27,3 +33,6 @@ typedef struct {
 	TimeStamp TIMESTAMP;
 	JulianDay JD;
 } TimeStruct;
+#pragma pack()
+
+#define TIMESTRUCT_SIZE sizeof(TimeStruct)

@@ -14,6 +14,10 @@ TimeStruct JulianDayToGreg(JulianDay JD);
 JulianDay JulianToJD(TimeStruct timeStruct);
 TimeStruct JulianDayToJulian(JulianDay JD);
 
+// HIJRI
+JulianDay HijriToJD(TimeStruct timeStruct);
+TimeStruct JulianDayToHijri(JulianDay JD);
+
 // UNIX TIMESTAMP
 JulianDay UNIXToJD(TimeStamp unix_time);
 TimeStamp JulianDayToUNIX(JulianDay JD);

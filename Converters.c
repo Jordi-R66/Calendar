@@ -92,6 +92,7 @@ TimeStruct JulianDayToGreg(JulianDay JD) {
 }
 
 // JULIAN
+
 JulianDay JulianToJD(TimeStruct timeStruct) {
 	uint64_t YEAR = timeStruct.JULIAN_YEAR;
 	uint8_t MONTH = timeStruct.JULIAN_MONTH, DAY = timeStruct.JULIAN_DAY;
@@ -122,6 +123,30 @@ TimeStruct JulianDayToJulian(JulianDay JD) {
 	TimeStruct fracStruct = DayFracToTime(FRAC(Q));
 
 	return (TimeStruct) { .JULIAN_DAY = DAY, .JULIAN_MONTH = MONTH, .JULIAN_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
+}
+
+// HIJRI
+
+JulianDay HijriToJD(TimeStruct timeStruct) {
+	uint64_t YEAR = timeStruct.HIJRI_YEAR;
+	uint8_t MONTH = timeStruct.HIJRI_MONTH, DAY = timeStruct.HIJRI_DAY;
+
+	return TRONQ((10631 * (JulianDay)YEAR + 58442583.0) / 30.0) + TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0) + (JulianDay)DAY + TimeToDayFrac(timeStruct) - 1;
+}
+
+TimeStruct JulianDayToHijri(JulianDay JD) {
+	int64_t YEAR = (int64_t)TRONQ((30.0 * JD - 58442554.0) / 10631.0);
+	double R2 = JD - TRONQ((10631.0 * (JulianDay)YEAR + 58442583.0) / 30.0);
+
+	uint8_t MONTH = (uint8_t)TRONQ((11.0 * R2 + 330.0) / 325.0);
+	double R1 = R2 - TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0);
+
+	double Q = R1 + 1.0 +.5;
+	uint8_t DAY = (uint8_t)ENT(Q);
+
+	TimeStruct fracStruct = DayFracToTime(FRAC(Q));
+
+	return (TimeStruct) { .HIJRI_DAY = DAY, .HIJRI_MONTH = MONTH, .HIJRI_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
 }
 
 // UNIX TIMESTAMP
