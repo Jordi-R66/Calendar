@@ -125,7 +125,7 @@ TimeStruct JulianDayToJulian(JulianDay JD) {
 	return (TimeStruct) { .JULIAN_DAY = DAY, .JULIAN_MONTH = MONTH, .JULIAN_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
 }
 
-// HIJRI
+// HIJRI CALENDAR
 
 JulianDay HijriToJD(TimeStruct timeStruct) {
 	uint64_t YEAR = timeStruct.HIJRI_YEAR;
