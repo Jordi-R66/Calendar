@@ -9,6 +9,20 @@ typedef int64_t TimeStamp;
 
 #pragma pack(1)
 typedef struct {
+	int64_t YEAR;
+	uint8_t MONTH;
+	uint8_t DAY;
+
+	uint8_t HOUR;
+	uint8_t MINUTE;
+	uint8_t SECONDS;
+
+	// UNIVERSAL
+	TimeStamp TIMESTAMP;
+	JulianDay JD;
+} SimpleTime;
+
+typedef struct {
 	// GREGORIAN CALENDAR
 	int64_t GREG_YEAR;
 	uint8_t GREG_MONTH;
@@ -36,3 +50,4 @@ typedef struct {
 #pragma pack()
 
 #define TIMESTRUCT_SIZE sizeof(TimeStruct)
+#define SIMPLETIME_SIZE sizeof(SimpleTime)
