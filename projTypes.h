@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef double JulianDay;
 typedef int64_t TimeStamp;
