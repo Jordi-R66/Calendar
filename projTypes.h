@@ -8,6 +8,14 @@ typedef double JulianDay;
 typedef int64_t TimeStamp;
 
 #pragma pack(1)
+typedef enum {
+	GREGORIAN_CAL = 0,
+	JULIAN_CAL = 1,
+	HIJRI_CAL = 2,
+	JULIAN_DAY = 3,
+	UNIX_TIME = 4
+} TimeFormats;
+
 typedef struct {
 	int64_t YEAR;
 	uint8_t MONTH;
