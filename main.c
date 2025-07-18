@@ -33,7 +33,7 @@ SimpleTime arg_handler(char* argv[], int argc) {
 		invalidArgs = true;
 	} else {
 		for (uint8_t i = 0; i < MODES_AMOUNT; i++) {
-			if (strcmp(argv[2], validModeArgs[i]) == 0) {
+			if (strcmp(argv[1], validModeArgs[i]) == 0) {
 				switch (i) {
 					case 0:
 						output = parseConverter(argv, argc);
