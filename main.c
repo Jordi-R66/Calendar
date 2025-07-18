@@ -1,6 +1,7 @@
 #include "projTypes.h"
 
 #define MODES_AMOUNT 3
+#define TIMEFORMATS_AMOUT 5
 
 #include "Converters.h"
 
