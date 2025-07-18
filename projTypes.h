@@ -15,7 +15,8 @@ typedef enum {
 	JULIAN_CAL = 1,
 	HIJRI_CAL = 2,
 	JULIAN_DAY = 3,
-	UNIX_TIME = 4
+	UNIX_TIME = 4,
+	UNKNOWN = 255
 } TimeFormats;
 
 typedef struct {
