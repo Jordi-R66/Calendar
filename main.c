@@ -14,6 +14,54 @@ void printHelpMessage() {
 SimpleTime parseConverter(char* argv[], int argc);
 SimpleTime parseDifference(char* argv[], int argc);
 
+SimpleTime arg_handler(char* argv[], int argc) {
+	SimpleTime output;
+
+	char* validModeArgs[] = {
+		"-c", "-d", "-h"
+	};
+
+	char* validTimeFormats[] = {
+		"GC", "JC", "HC", "JD", "UT"
+	};
+
+	TimeFormats FormatA, FormatB;
+
+	bool invalidArgs = false;
+
+	if (argc < 2) {
+		invalidArgs = true;
+	} else {
+		for (uint8_t i = 0; i < MODES_AMOUNT; i++) {
+			if (strcmp(argv[2], validModeArgs[i]) == 0) {
+				switch (i) {
+					case 0:
+						output = parseConverter(argv, argc);
+						break;
+
+					case 1:
+						output = parseDifference(argv, argc);
+						break;
+
+					case 2:
+						fprintf(stderr, "Here's the help you asked for!\n\n");
+						printHelpMessage();
+
+					default:
+						invalidArgs = true;
+						break;
+				}
+			}
+		}
+	}
+
+	if (invalidArgs) {
+		fprintf(stderr, "Invalid args detected\n");
+		printHelpMessage();
+	}
+
+	return output;
+}
 
 int main(int argc, char* argv[]) {
 
