@@ -30,6 +30,10 @@ typedef struct {
 	// UNIVERSAL
 	TimeStamp TIMESTAMP;
 	JulianDay JD;
+
+	// Conversion instructions
+	bool convertToAll;
+	TimeFormats source, dest;
 } SimpleTime;
 
 typedef struct {
