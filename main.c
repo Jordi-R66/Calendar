@@ -11,6 +11,10 @@ void printHelpMessage() {
 	exit(EXIT_FAILURE);
 }
 
+SimpleTime parseConverter(char* argv[], int argc);
+SimpleTime parseDifference(char* argv[], int argc);
+
+
 int main(int argc, char* argv[]) {
 
 	JulianDay J2000 = GregToJD((TimeStruct){.GREG_DAY = 4, .GREG_MONTH = 1, .GREG_YEAR = 1643, .HOUR = 0});
