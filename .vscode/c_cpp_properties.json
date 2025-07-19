@@ -8,8 +8,8 @@
             "defines": [],
             "intelliSenseMode": "linux-gcc-x64",
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "compilerArgs": []
+            "cStandard": "c17",
+            "compilerArgs": ["-fshort-enums"]
         }
     ],
     "version": 4
