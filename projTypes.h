@@ -20,7 +20,7 @@ typedef enum {
 } TimeFormats;
 
 typedef struct {
-	int64_t YEAR;
+	int16_t YEAR;
 	uint8_t MONTH;
 	uint8_t DAY;
 
@@ -39,17 +39,17 @@ typedef struct {
 
 typedef struct {
 	// GREGORIAN CALENDAR
-	int64_t GREG_YEAR;
+	int16_t GREG_YEAR;
 	uint8_t GREG_MONTH;
 	uint8_t GREG_DAY;
 
 	// JULIAN CALENDAR
-	int64_t JULIAN_YEAR;
+	int16_t JULIAN_YEAR;
 	uint8_t JULIAN_MONTH;
 	uint8_t JULIAN_DAY;
 
 	// HIJRI CALENDAR
-	int64_t HIJRI_YEAR;
+	int16_t HIJRI_YEAR;
 	uint8_t HIJRI_MONTH;
 	uint8_t HIJRI_DAY;
 
