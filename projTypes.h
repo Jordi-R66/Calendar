@@ -35,7 +35,7 @@ typedef struct {
 	// Conversion instructions
 	bool convertToAll;
 	TimeFormats source, dest;
-} SimpleTime;
+} InputTime;
 
 typedef struct {
 	// GREGORIAN CALENDAR
@@ -65,4 +65,4 @@ typedef struct {
 #pragma pack()
 
 #define TIMESTRUCT_SIZE sizeof(TimeStruct)
-#define SIMPLETIME_SIZE sizeof(SimpleTime)
+#define INPUTTIME_SIZE sizeof(InputTime)
