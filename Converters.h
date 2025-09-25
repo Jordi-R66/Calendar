@@ -21,3 +21,7 @@ TimeStruct JulianDayToHijri(JulianDay JD);
 // UNIX TIMESTAMP
 JulianDay UNIXToJD(TimeStamp unix_time);
 TimeStamp JulianDayToUNIX(JulianDay JD);
+
+// NORAD
+JulianDay NORADToJD(JulianDay norad, bool cropped);
+JulianDay JDToNORAD(JulianDay JD, bool cropped);

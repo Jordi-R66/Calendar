@@ -162,3 +162,21 @@ TimeStamp JulianDayToUNIX(JulianDay JD) {
 
 	return (TimeStamp)((JD - UNIX_0_JD) * 86400.0);
 }
+
+// NORAD JULIAN DAY
+
+JulianDay NORADToJD(JulianDay norad, bool cropped) {
+	int16_t year = 0;
+	JulianDay day = fmod(norad, 1000.0);
+
+	year = ((uint32_t)norad - (uint32_t)day) / 1000;
+
+	if (cropped) {
+		year += year < 57 ? 2000 : 1900;
+	}
+
+	TimeStruct gregYear = {.GREG_YEAR=year, .GREG_MONTH=1, .GREG_DAY=1};
+	JulianDay JD = GregToJD(gregYear) + day - 0.5;
+
+	return JD;
+}
