@@ -8,7 +8,10 @@
 extern const char helpMessage[];
 extern char* validTimeFormats[];
 
-void printHelpMessage();
-InputTime parseTime(char* TIME[], TimeFormats format);
+void printHelpMessage(void);
+void parseFields(long fields[], uint8_t fields_number, char* string, char sep);
+TimeStruct parseDDMMYYYY(char* date);
+TimeStruct parseHHMMSS(char* timeOfDay);
+TimeStruct parseTime(char* timeString, TimeFormats format);
 InputTime parseConverter(char* argv[], int argc);
 InputTime parseDifference(char* argv[], int argc);

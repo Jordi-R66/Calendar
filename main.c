@@ -16,19 +16,21 @@ InputTime arg_handler(char* argv[], int argc) {
 	if (argc < 2) {
 		invalidArgs = true;
 	} else {
+		char** parserArgV = &argv[2];
+		int parserArgC = argc - 2;
+
 		for (uint8_t i = 0; i < MODES_AMOUNT; i++) {
 			if (strcmp(argv[1], validModeArgs[i]) == 0) {
 				switch (i) {
 					case 0:
-						output = parseConverter(argv, argc);
+						output = parseConverter(parserArgV, parserArgC);
 						break;
 
 					case 1:
-						output = parseDifference(argv, argc);
+						output = parseDifference(parserArgV, parserArgC);
 						break;
 
 					case 2:
-						fprintf(stderr, "Here's the help you asked for!\n\n");
 						printHelpMessage();
 
 					default:
@@ -48,19 +50,9 @@ InputTime arg_handler(char* argv[], int argc) {
 }
 
 int main(int argc, char* argv[]) {
-	//arg_handler(argv, argc);
+	InputTime time = arg_handler(argv, argc);
 
-	//char* TIME[] = {"01/01/1970", "01:00:00"};
-	char* TIME[] = {"2451545"};
-
-	//InputTime test = parseTime(TIME, JULIAN_DAY);
-
-	JulianDay NORAD = 25205.55836557;
-	JulianDay jd = NORADToJD(NORAD, true);
-
-	TimeStruct greg = JulianDayToGreg(jd);
-
-	printf("%hu/%u/%u @ %u:%u:%u\n", greg.GREG_DAY, greg.GREG_MONTH, greg.GREG_YEAR, greg.HOUR, greg.MINUTE, greg.SECONDS);
+	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", time.timeStruct.YEAR, time.timeStruct.MONTH, time.timeStruct.DAY, time.timeStruct.HOUR, time.timeStruct.MINUTE, time.timeStruct.SECONDS, time.timeStruct.TIMESTAMP, time.timeStruct.JD);
 
 	return EXIT_SUCCESS;
 }
