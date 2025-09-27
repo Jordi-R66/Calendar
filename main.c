@@ -1,7 +1,7 @@
 #include "projTypes.h"
 
 #define MODES_AMOUNT 3
-#define TIMEFORMATS_AMOUT 5
+#define TIMEFORMATS_AMOUNT 5
 
 #include "Converters.h"
 
@@ -79,7 +79,7 @@ InputTime parseConverter(char* argv[], int argc) {
 
 	TimeFormats source = UNKNOWN, dest = UNKNOWN;
 
-	for (uint8_t i = 0; i < TIMEFORMATS_AMOUT; i++) {
+	for (uint8_t i = 0; i < TIMEFORMATS_AMOUNT; i++) {
 		source = strcmp(source_format, validTimeFormats[i]) == 0 ? i : source;
 	}
 
@@ -93,7 +93,7 @@ InputTime parseConverter(char* argv[], int argc) {
 	output.convertToAll = argc != (sourceIndex + 1);
 	dest_format = argc == (sourceIndex + 1) ? argv[sourceIndex] : NULL;
 
-	for (uint8_t i = 0; i < TIMEFORMATS_AMOUT && !output.convertToAll; i++) {
+	for (uint8_t i = 0; i < TIMEFORMATS_AMOUNT && !output.convertToAll; i++) {
 		dest = strcmp(dest_format, validTimeFormats[i]) == 0 ? i : dest;
 	}
 
