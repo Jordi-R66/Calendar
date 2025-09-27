@@ -1,6 +1,6 @@
 #include "CalendarIO.h"
 
-const char helpMessage[] = "The right syntax for this program is the following :\n\n\tDIFFERENCE :\n\t\tprog -d FORMAT_A TIME_A FORMAT_B TIME_B\n\n\tCONVERSION :\n\t\tprog -c SOURCE_FORMAT TIME (TARGET_FORMAT)\n\nSYNTAX FOR TIME :\nIf the selected format (or calendar) is either \"JD\" either \"UT\" the TIME argument will be an Integer for UT and a double-precision floating point number for JD.\nFor every other calendar TIME is ALWAYS composed of two separate arguments :\n\tThe first one is the date written as DD/MM/YYYY and the other one is the time of the day as hh:mm:ss using a 24hr format\n";
+const char helpMessage[] = "The right syntax for this program is the following :\n\n  DIFFERENCE :\n    prog -d FORMAT_A TIME_A FORMAT_B TIME_B\n\n  CONVERSION :\n    prog -c SOURCE_FORMAT TIME (TARGET_FORMAT)\n\nSYNTAX FOR TIME :\nIf the selected format (or calendar) is either \"JD\" either \"UT\" the TIME argument will be an Integer for UT and a double-precision floating point number for JD.\nFor every other calendar TIME is ALWAYS composed of two separate arguments :\n  The first one is the date written as DD/MM/YYYY and the other one is the time of the day as hh:mm:ss using a 24hr format\n";
 
 char* validTimeFormats[] = {
 	"GC", "JC", "HC", "JD", "UT"
@@ -70,7 +70,7 @@ InputTime parseConverter(char* argv[], int argc) {
 	char* source_format = argv[0];
 	char* dest_format;
 
-	// --------------------------------------------------------------------------------------------
+	// -------------------------------
 
 	TimeFormats source = UNKNOWN, dest = UNKNOWN;
 
@@ -99,22 +99,22 @@ InputTime parseConverter(char* argv[], int argc) {
 
 	switch (source) {
 		case UNIX_TIME:
-			output.TIMESTAMP = parsedTime.TIMESTAMP;
+			output.timeStruct.TIMESTAMP = parsedTime.timeStruct.TIMESTAMP;
 			break;
 
 		case JULIAN_DAY:
-			output.JD = parsedTime.JD;
+			output.timeStruct.JD = parsedTime.timeStruct.JD;
 			break;
 
 		default:
 			if (source == JULIAN_CAL || source == GREGORIAN_CAL || source == HIJRI_CAL) {
-				output.YEAR = parsedTime.YEAR;
-				output.MONTH = parsedTime.MONTH;
-				output.DAY = parsedTime.DAY;
+				output.timeStruct.YEAR = parsedTime.timeStruct.YEAR;
+				output.timeStruct.MONTH = parsedTime.timeStruct.MONTH;
+				output.timeStruct.DAY = parsedTime.timeStruct.DAY;
 
-				output.HOUR = parsedTime.HOUR;
-				output.MINUTE = parsedTime.MINUTE;
-				output.SECONDS = parsedTime.SECONDS;
+				output.timeStruct.HOUR = parsedTime.timeStruct.HOUR;
+				output.timeStruct.MINUTE = parsedTime.timeStruct.MINUTE;
+				output.timeStruct.SECONDS = parsedTime.timeStruct.SECONDS;
 			} else {
 				printHelpMessage();
 			}

@@ -4,7 +4,7 @@
 
 const uint64_t NAN_INT = 0b0111111111110000000000000000000000000000000000000000000000000001L;
 
-const TimeStruct UNIX_0_TS = { .GREG_YEAR = 1970, .GREG_MONTH = 1, .GREG_DAY = 1 };
+const TimeStruct UNIX_0_TS = { .YEAR = 1970, .MONTH = 1, .DAY = 1 };
 
 // NEEDED
 
@@ -55,8 +55,8 @@ TimeStruct DayFracToTime(JulianDay dayFrac) {
 // GREGORIAN CALENDAR
 
 JulianDay GregToJD(TimeStruct timeStruct) {
-	int16_t YEAR = timeStruct.GREG_YEAR;
-	uint8_t MONTH = timeStruct.GREG_MONTH, DAY = timeStruct.GREG_DAY;
+	int16_t YEAR = timeStruct.YEAR;
+	uint8_t MONTH = timeStruct.MONTH, DAY = timeStruct.DAY;
 
 	if (MONTH == 1 || MONTH == 2) {
 		YEAR--;
@@ -88,14 +88,14 @@ TimeStruct JulianDayToGreg(JulianDay JD) {
 
 	TimeStruct fracStruct = DayFracToTime(F);
 
-	return (TimeStruct) { .GREG_DAY = DAY, .GREG_MONTH = MONTH, .GREG_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
+	return (TimeStruct) { .DAY = DAY, .MONTH = MONTH, .YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
 }
 
 // JULIAN
 
 JulianDay JulianToJD(TimeStruct timeStruct) {
-	int16_t YEAR = timeStruct.JULIAN_YEAR;
-	uint8_t MONTH = timeStruct.JULIAN_MONTH, DAY = timeStruct.JULIAN_DAY;
+	int16_t YEAR = timeStruct.YEAR;
+	uint8_t MONTH = timeStruct.MONTH, DAY = timeStruct.DAY;
 
 	if (MONTH == 1 || MONTH == 2) {
 		YEAR--;
@@ -122,14 +122,14 @@ TimeStruct JulianDayToJulian(JulianDay JD) {
 
 	TimeStruct fracStruct = DayFracToTime(FRAC(Q));
 
-	return (TimeStruct) { .JULIAN_DAY = DAY, .JULIAN_MONTH = MONTH, .JULIAN_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
+	return (TimeStruct) { .DAY = DAY, .MONTH = MONTH, .YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
 }
 
 // HIJRI CALENDAR
 
 JulianDay HijriToJD(TimeStruct timeStruct) {
-	uint16_t YEAR = timeStruct.HIJRI_YEAR;
-	uint8_t MONTH = timeStruct.HIJRI_MONTH, DAY = timeStruct.HIJRI_DAY;
+	uint16_t YEAR = timeStruct.YEAR;
+	uint8_t MONTH = timeStruct.MONTH, DAY = timeStruct.DAY;
 
 	return TRONQ((10631.0 * (JulianDay)YEAR + 58442583.0) / 30.0) + TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0) + (JulianDay)DAY + TimeToDayFrac(timeStruct) - 1.0 - 0.5;
 }
@@ -146,7 +146,7 @@ TimeStruct JulianDayToHijri(JulianDay JD) {
 
 	TimeStruct fracStruct = DayFracToTime(FRAC(Q));
 
-	return (TimeStruct) { .HIJRI_DAY = DAY, .HIJRI_MONTH = MONTH, .HIJRI_YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
+	return (TimeStruct) { .DAY = DAY, .MONTH = MONTH, .YEAR = YEAR, .HOUR = fracStruct.HOUR, .MINUTE = fracStruct.MINUTE, .SECONDS = fracStruct.SECONDS, .JD = JD, .TIMESTAMP = JulianDayToUNIX(JD) };
 }
 
 // UNIX TIMESTAMP
@@ -175,7 +175,7 @@ JulianDay NORADToJD(JulianDay norad, bool cropped) {
 		year += year < 57 ? 2000 : 1900;
 	}
 
-	TimeStruct gregYear = {.GREG_YEAR=year, .GREG_MONTH=1, .GREG_DAY=1};
+	TimeStruct gregYear = {.YEAR=year, .MONTH=1, .DAY=1};
 	JulianDay JD = GregToJD(gregYear) + day - 0.5;
 
 	return JD;
