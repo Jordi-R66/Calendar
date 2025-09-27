@@ -1,4 +1,4 @@
-#include "projTypes.h"
+#include "CalendarTypes.h"
 
 #define MODES_AMOUNT 3
 #define TIMEFORMATS_AMOUNT 5

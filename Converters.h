@@ -1,6 +1,6 @@
 #pragma once
 
-#include "projTypes.h"
+#include "CalendarTypes.h"
 
 // MATHEMATICAL DAY
 JulianDay TimeToDayFrac(TimeStruct timeStruct);
