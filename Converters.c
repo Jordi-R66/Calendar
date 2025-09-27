@@ -4,7 +4,7 @@
 
 const uint64_t NAN_INT = 0b0111111111110000000000000000000000000000000000000000000000000001L;
 
-const TimeStruct UNIX_0_TS = { .YEAR = 1970, .MONTH = 1, .DAY = 1 };
+const TimeStruct UNIX_0_TS_GC = { .YEAR = 1970, .MONTH = 1, .DAY = 1 };
 
 // NEEDED
 
@@ -152,7 +152,7 @@ TimeStruct JulianDayToHijri(JulianDay JD) {
 // UNIX TIMESTAMP
 
 JulianDay UNIXToJD(TimeStamp unix_time) {
-	JulianDay output = GregToJD(UNIX_0_TS);
+	JulianDay output = GregToJD(UNIX_0_TS_GC);
 
 	return output + (JulianDay)unix_time / 86400.0;
 }
