@@ -3,8 +3,8 @@
 #include "CalendarTypes.h"
 
 // MATHEMATICAL DAY
-JulianDay TimeToDayFrac(TimeStruct timeStruct);
-TimeStruct DayFracToTime(JulianDay dayFrac);
+JulianDay TimeToDayFrac(TimeOfDay timeStruct);
+TimeOfDay DayFracToTime(JulianDay dayFrac);
 
 // GREGORIAN
 JulianDay GregToJD(TimeStruct timeStruct);
@@ -25,3 +25,5 @@ TimeStamp JulianDayToUNIX(JulianDay JD);
 // NORAD
 JulianDay NORADToJD(JulianDay norad, bool cropped);
 JulianDay JDToNORAD(JulianDay JD, bool cropped);
+
+CompleteTimeStruct generalConverter(TimeStruct sourceTime, TimeFormats source, TimeFormats target);

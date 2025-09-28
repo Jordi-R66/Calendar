@@ -73,7 +73,7 @@ typedef struct {
 
 typedef struct {
 	Actions action;
-	TimeStruct result;
+	CompleteTimeStruct result;
 } ActionResult;
 
 #pragma pack()
@@ -83,3 +83,5 @@ typedef struct {
 #define ACTIONSTRUCT_SIZE sizeof(ActionStruct)
 #define ACTIONRESULT_SIZE sizeof(ActionResult)
 #define COMPLETETIMESTRUCT_SIZE sizeof(CompleteTimeStruct)
+
+#define TIMEFORMATS_AMOUNT 5
