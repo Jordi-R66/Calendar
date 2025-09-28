@@ -62,9 +62,11 @@ ActionResult executeAction(ActionStruct actionStruct) {
 
 	InputTime* timeArray = actionStruct.timeArray;
 
+	output.action = actionStruct.action;
+
 	switch (actionStruct.action) {
 		case CONVERSION:
-			generalConverter(timeArray[0].timeStruct, timeArray[0].source, timeArray[0].dest);
+			output.result = generalConverter(timeArray[0].timeStruct, timeArray[0].source, timeArray[0].dest);
 			break;
 
 		default:
@@ -77,7 +79,13 @@ ActionResult executeAction(ActionStruct actionStruct) {
 int main(int argc, char* argv[]) {
 	ActionStruct actionStruct = arg_handler(argv, argc);
 
-	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.date.YEAR, actionStruct.timeArray[0].timeStruct.date.MONTH, actionStruct.timeArray[0].timeStruct.date.DAY, actionStruct.timeArray[0].timeStruct.timeOfDay.HOUR, actionStruct.timeArray[0].timeStruct.timeOfDay.MINUTE, actionStruct.timeArray[0].timeStruct.timeOfDay.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
+	ActionResult result = executeAction(actionStruct);
+
+	printf("DATE : %u/%u/%hd @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.date.DAY, actionStruct.timeArray[0].timeStruct.date.MONTH, actionStruct.timeArray[0].timeStruct.date.YEAR, actionStruct.timeArray[0].timeStruct.timeOfDay.HOUR, actionStruct.timeArray[0].timeStruct.timeOfDay.MINUTE, actionStruct.timeArray[0].timeStruct.timeOfDay.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
+
+	FILE* fp = fopen("result.bin", "w");
+	fwrite(&result, ACTIONRESULT_SIZE, 1, fp);
+	fclose(fp);
 
 	return EXIT_SUCCESS;
 }
