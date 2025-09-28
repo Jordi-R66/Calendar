@@ -167,7 +167,6 @@ InputTime parseConverter(char* argv[], int argc) {
 		END IF
 	*/
 
-	char* TIME[2];
 	InputTime output = {.timeStruct = {0, 0, 0, 0, 0, 0, 0, 0}, false, UNKNOWN, UNKNOWN};
 
 	uint8_t inputIndex = 0, outputIndex = argc - 1;
@@ -226,6 +225,86 @@ InputTime parseConverter(char* argv[], int argc) {
 	return output;
 }
 
-InputTime parseDifference(char* argv[], int argc) {
+void parseDifference(char* argv[], int argc, InputTime timeArray[2]) {
+	InputTime *TIME_A = &timeArray[0],
+			  *TIME_B = &timeArray[1];
 
+	TimeStruct parsedA, parsedB;
+
+	uint8_t FormatA_Index = 0, FormatB_Index;
+	uint8_t TimeA_Length, TimeB_Length;
+
+	TimeFormats formatA = UNKNOWN, formatB = UNKNOWN;
+
+	bool AisCalendar, BisCalendar;
+
+	// Checking FORMAT_A and TIME_A
+
+	for (uint8_t i = 0; i < TIMEFORMATS_AMOUNT; i++) {
+		if (strcmp(argv[FormatA_Index], validTimeFormats[i]) == 0) {
+			formatA = (TimeFormats)i;
+			AisCalendar = formatA < 3;
+			TimeA_Length = AisCalendar ? 2 : 1;
+		}
+	}
+
+	if (formatA == UNKNOWN) {
+		fprintf(stderr, "Unknown format '%s'\n", argv[FormatA_Index]);
+		exit(EXIT_FAILURE);
+	}
+
+	FormatB_Index = FormatA_Index + TimeA_Length + 1;
+
+	if (FormatB_Index >= argc) {
+		fprintf(stderr, "Not enough arguments\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (AisCalendar) {
+		parsedA = parseDDMMYYYY(argv[FormatA_Index + 1]);
+		TimeStruct timeOfDay = parseHHMMSS(argv[FormatA_Index + 2]);
+
+		parsedA.HOUR = timeOfDay.HOUR;
+		parsedA.MINUTE = timeOfDay.MINUTE;
+		parsedA.SECONDS = timeOfDay.SECONDS;
+	} else {
+		parsedA = parseTime(argv[FormatA_Index + 1], formatA);
+	}
+
+	// Checking FORMAT_B and TIME_B
+
+	for (uint8_t i = 0; i < TIMEFORMATS_AMOUNT; i++) {
+		if (strcmp(argv[FormatB_Index], validTimeFormats[i]) == 0) {
+			formatB = (TimeFormats)i;
+			BisCalendar = formatB < 3;
+			TimeB_Length = BisCalendar ? 2 : 1;
+		}
+	}
+
+	if (formatB == UNKNOWN) {
+		fprintf(stderr, "Unknown format '%s'\n", argv[FormatB_Index]);
+		exit(EXIT_FAILURE);
+	}
+
+	if (argc != (FormatB_Index + TimeB_Length + 1)) {
+		fprintf(stderr, "Wrong amount of arguments, you should have provided %d arguments but got %d.\n", (FormatB_Index + TimeB_Length + 1) + 1, argc + 1);
+		exit(EXIT_FAILURE);
+	}
+
+	if (BisCalendar) {
+		parsedB = parseDDMMYYYY(argv[FormatB_Index + 1]);
+		TimeStruct timeOfDay = parseHHMMSS(argv[FormatB_Index + 2]);
+
+		parsedB.HOUR = timeOfDay.HOUR;
+		parsedB.MINUTE = timeOfDay.MINUTE;
+		parsedB.SECONDS = timeOfDay.SECONDS;
+	} else {
+		parsedB = parseTime(argv[FormatB_Index + 1], formatB);
+	}
+
+	TIME_A->timeStruct = parsedA;
+	TIME_A->source = formatA;
+
+	TIME_B->timeStruct = parsedB;
+	TIME_B->source = formatB;
 }

@@ -19,6 +19,11 @@ typedef enum {
 	UNKNOWN = 255
 } TimeFormats;
 
+typedef enum {
+	CONVERSION = 0,
+	DIFFERENCE = 1
+} Actions;
+
 typedef struct {
 	// CALENDAR
 	int16_t YEAR;
@@ -43,7 +48,13 @@ typedef struct {
 	TimeFormats source, dest;
 } InputTime;
 
+typedef struct {
+	Actions action;
+	InputTime timeArray[2];
+}ActionStruct;
+
 #pragma pack()
 
 #define TIMESTRUCT_SIZE sizeof(TimeStruct)
 #define INPUTTIME_SIZE sizeof(InputTime)
+#define ACTIONSTRUCT_SIZE sizeof(ActionStruct)

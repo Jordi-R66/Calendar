@@ -14,4 +14,4 @@ TimeStruct parseDDMMYYYY(char* date);
 TimeStruct parseHHMMSS(char* timeOfDay);
 TimeStruct parseTime(char* timeString, TimeFormats format);
 InputTime parseConverter(char* argv[], int argc);
-InputTime parseDifference(char* argv[], int argc);
+void parseDifference(char* argv[], int argc, InputTime timeArray[2]);

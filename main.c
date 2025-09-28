@@ -2,8 +2,8 @@
 #include "CalendarIO.h"
 #include "Converters.h"
 
-InputTime arg_handler(char* argv[], int argc) {
-	InputTime output;
+ActionStruct arg_handler(char* argv[], int argc) {
+	ActionStruct output;
 
 	char* validModeArgs[] = {
 		"-c", "-d", "-h"
@@ -23,11 +23,18 @@ InputTime arg_handler(char* argv[], int argc) {
 			if (strcmp(argv[1], validModeArgs[i]) == 0) {
 				switch (i) {
 					case 0:
-						output = parseConverter(parserArgV, parserArgC);
+						output.action = CONVERSION;
+						output.timeArray[0] = parseConverter(parserArgV, parserArgC);
 						break;
 
 					case 1:
-						output = parseDifference(parserArgV, parserArgC);
+						output.action = DIFFERENCE;
+
+						InputTime timeArray[2];
+
+						parseDifference(parserArgV, parserArgC, timeArray);
+
+						memcpy(output.timeArray, timeArray, sizeof(timeArray));
 						break;
 
 					case 2:
@@ -50,9 +57,9 @@ InputTime arg_handler(char* argv[], int argc) {
 }
 
 int main(int argc, char* argv[]) {
-	InputTime time = arg_handler(argv, argc);
+	ActionStruct actionStruct = arg_handler(argv, argc);
 
-	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", time.timeStruct.YEAR, time.timeStruct.MONTH, time.timeStruct.DAY, time.timeStruct.HOUR, time.timeStruct.MINUTE, time.timeStruct.SECONDS, time.timeStruct.TIMESTAMP, time.timeStruct.JD);
+	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.YEAR, actionStruct.timeArray[0].timeStruct.MONTH, actionStruct.timeArray[0].timeStruct.DAY, actionStruct.timeArray[0].timeStruct.HOUR, actionStruct.timeArray[0].timeStruct.MINUTE, actionStruct.timeArray[0].timeStruct.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
 
 	return EXIT_SUCCESS;
 }
