@@ -41,8 +41,8 @@ void parseFields(long fields[], uint8_t fields_number, char* string, char sep) {
 	}
 }
 
-TimeStruct parseDDMMYYYY(char* date) {
-	TimeStruct output;
+DateStruct parseDDMMYYYY(char* date) {
+	DateStruct output;
 
 	long fields[3];
 
@@ -58,7 +58,7 @@ TimeStruct parseDDMMYYYY(char* date) {
 		exit(EXIT_FAILURE);
 	}
 
-	memset(&output, 0, TIMESTRUCT_SIZE);
+	memset(&output, 0, sizeof(DateStruct));
 
 	if (fields[0] < 256) {
 		output.DAY = (uint8_t)fields[0];
@@ -84,8 +84,8 @@ TimeStruct parseDDMMYYYY(char* date) {
 	return output;
 }
 
-TimeStruct parseHHMMSS(char* timeOfDay) {
-	TimeStruct output;
+TimeOfDay parseHHMMSS(char* timeOfDay) {
+	TimeOfDay output;
 
 	long fields[3];
 
@@ -106,7 +106,7 @@ TimeStruct parseHHMMSS(char* timeOfDay) {
 		exit(EXIT_FAILURE);
 	}
 
-	memset(&output, 0, TIMESTRUCT_SIZE);
+	memset(&output, 0, sizeof(TimeOfDay));
 
 	if (fields[0] < 24) {
 		output.HOUR = (uint8_t)fields[0];
@@ -167,7 +167,7 @@ InputTime parseConverter(char* argv[], int argc) {
 		END IF
 	*/
 
-	InputTime output = {.timeStruct = {0, 0, 0, 0, 0, 0, 0, 0}, false, UNKNOWN, UNKNOWN};
+	InputTime output = {.timeStruct = {0, 0, 0, 0, 0, 0, 0, 0}, UNKNOWN, UNKNOWN};
 
 	uint8_t inputIndex = 0, outputIndex = argc - 1;
 	uint8_t dateIndex = inputIndex + 1, timeIndex = dateIndex + 1;
@@ -210,12 +210,8 @@ InputTime parseConverter(char* argv[], int argc) {
 	TimeStruct parsed;
 
 	if (sourceIsCalendar) {
-		parsed = parseDDMMYYYY(argv[dateIndex]);
-		TimeStruct timeOfDay = parseHHMMSS(argv[timeIndex]);
-
-		parsed.HOUR = timeOfDay.HOUR;
-		parsed.MINUTE = timeOfDay.MINUTE;
-		parsed.SECONDS = timeOfDay.SECONDS;
+		parsed.date = parseDDMMYYYY(argv[dateIndex]);
+		parsed.timeOfDay = parseHHMMSS(argv[timeIndex]);
 	} else {
 		parsed = parseTime(argv[dateIndex], output.source);
 	}
@@ -261,12 +257,8 @@ void parseDifference(char* argv[], int argc, InputTime timeArray[2]) {
 	}
 
 	if (AisCalendar) {
-		parsedA = parseDDMMYYYY(argv[FormatA_Index + 1]);
-		TimeStruct timeOfDay = parseHHMMSS(argv[FormatA_Index + 2]);
-
-		parsedA.HOUR = timeOfDay.HOUR;
-		parsedA.MINUTE = timeOfDay.MINUTE;
-		parsedA.SECONDS = timeOfDay.SECONDS;
+		parsedA.date = parseDDMMYYYY(argv[FormatA_Index + 1]);
+		parsedA.timeOfDay = parseHHMMSS(argv[FormatA_Index + 2]);
 	} else {
 		parsedA = parseTime(argv[FormatA_Index + 1], formatA);
 	}
@@ -292,12 +284,8 @@ void parseDifference(char* argv[], int argc, InputTime timeArray[2]) {
 	}
 
 	if (BisCalendar) {
-		parsedB = parseDDMMYYYY(argv[FormatB_Index + 1]);
-		TimeStruct timeOfDay = parseHHMMSS(argv[FormatB_Index + 2]);
-
-		parsedB.HOUR = timeOfDay.HOUR;
-		parsedB.MINUTE = timeOfDay.MINUTE;
-		parsedB.SECONDS = timeOfDay.SECONDS;
+		parsedB.date = parseDDMMYYYY(argv[FormatB_Index + 1]);
+		parsedB.timeOfDay = parseHHMMSS(argv[FormatB_Index + 2]);
 	} else {
 		parsedB = parseTime(argv[FormatB_Index + 1], formatB);
 	}

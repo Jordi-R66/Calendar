@@ -56,10 +56,28 @@ ActionStruct arg_handler(char* argv[], int argc) {
 	return output;
 }
 
+ActionResult executeAction(ActionStruct actionStruct) {
+	ActionResult output;
+	memset(&output, 0, ACTIONRESULT_SIZE);
+
+	InputTime* timeArray = actionStruct.timeArray;
+
+	switch (actionStruct.action) {
+		case CONVERSION:
+			generalConverter(timeArray[0].timeStruct, timeArray[0].source, timeArray[0].dest);
+			break;
+
+		default:
+			break;
+	}
+
+	return output;
+}
+
 int main(int argc, char* argv[]) {
 	ActionStruct actionStruct = arg_handler(argv, argc);
 
-	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.YEAR, actionStruct.timeArray[0].timeStruct.MONTH, actionStruct.timeArray[0].timeStruct.DAY, actionStruct.timeArray[0].timeStruct.HOUR, actionStruct.timeArray[0].timeStruct.MINUTE, actionStruct.timeArray[0].timeStruct.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
+	printf("DATE : %hd/%u/%u @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.date.YEAR, actionStruct.timeArray[0].timeStruct.date.MONTH, actionStruct.timeArray[0].timeStruct.date.DAY, actionStruct.timeArray[0].timeStruct.timeOfDay.HOUR, actionStruct.timeArray[0].timeStruct.timeOfDay.MINUTE, actionStruct.timeArray[0].timeStruct.timeOfDay.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
 
 	return EXIT_SUCCESS;
 }
