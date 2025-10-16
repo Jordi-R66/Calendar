@@ -296,3 +296,40 @@ void parseDifference(char* argv[], int argc, InputTime timeArray[2]) {
 	TIME_B->timeStruct = parsedB;
 	TIME_B->source = formatB;
 }
+
+void printTimeStruct(TimeStruct time, TimeFormats format) {
+	char* formatString;
+	if ((GREGORIAN_CAL <= format) && (format <= UNIX_TIME)) {
+		formatString = validTimeFormats[format];
+	} else {
+		return;
+	}
+
+	if ((GREGORIAN_CAL <= format) && (format <= HIJRI_CAL)) {
+		int16_t year = time.date.YEAR;
+		uint8_t month = time.date.MONTH, day = time.date.DAY;
+
+		uint8_t hour, minute, second;
+
+		hour = time.timeOfDay.HOUR;
+		minute = time.timeOfDay.MINUTE;
+		second = time.timeOfDay.SECONDS;
+
+		fprintf(stdout, "(%s) %u/%u/%hd @ %u:%u:%u", formatString, day, month, year, hour, minute, second);
+	} else if ((JULIAN_DAY <= format) && (format <= UNIX_TIME)) {
+		switch (format) {
+			case JULIAN_DAY:
+				JulianDay jd = time.JD;
+				fprintf(stdout, "(%s) %.5f", formatString, jd);
+				break;
+
+			case UNIX_TIME:
+				TimeStamp ut = time.TIMESTAMP;
+				fprintf(stdout, "(%s) %ld", formatString, ut);
+				break;
+
+			default:
+				break;
+		}
+	}
+}
