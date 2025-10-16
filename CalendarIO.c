@@ -343,17 +343,17 @@ void printTimeStruct(TimeStruct time, TimeFormats format) {
 		minute = time.timeOfDay.MINUTE;
 		second = time.timeOfDay.SECONDS;
 
-		fprintf(stdout, "(%s) %u/%u/%hd @ %u:%u:%u", formatString, day, month, year, hour, minute, second);
+		fprintf(stdout, "DATE: %u/%u/%hd @ %u:%u:%u (%s)", day, month, year, hour, minute, second, formatString);
 	} else if ((JULIAN_DAY <= format) && (format <= UNIX_TIME)) {
 		switch (format) {
 			case JULIAN_DAY:
 				JulianDay jd = time.JD;
-				fprintf(stdout, "(%s) %.5f", formatString, jd);
+				fprintf(stdout, "TIME: %.5f (%s)", jd, formatString);
 				break;
 
 			case UNIX_TIME:
 				TimeStamp ut = time.TIMESTAMP;
-				fprintf(stdout, "(%s) %ld", formatString, ut);
+				fprintf(stdout, "TIME: %ld (%s)", ut, formatString);
 				break;
 
 			default:
