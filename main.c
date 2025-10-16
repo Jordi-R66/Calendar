@@ -2,11 +2,13 @@
 #include "CalendarIO.h"
 #include "Converters.h"
 
+#include <time.h>
+
 ActionStruct arg_handler(char* argv[], int argc) {
 	ActionStruct output;
 
 	char* validModeArgs[] = {
-		"-c", "-d", "-h"
+		"-h", "-d", "-c", "-n"
 	};
 
 	TimeFormats FormatA, FormatB;
@@ -40,6 +42,34 @@ ActionStruct arg_handler(char* argv[], int argc) {
 						output.timeArray[0] = parseConverter(parserArgV, parserArgC);
 						break;
 
+					case 3:
+						output.action = CONVERSION;
+
+						output.timeArray[0] = (InputTime){
+							.timeStruct = { .TIMESTAMP = time(NULL) },
+							.source = UNIX_TIME,
+							.dest = UNKNOWN
+						};
+
+						if (argc == 3) {
+							char* stringFormat = argv[2];
+
+							for (uint8_t i = 0; i < TIMEFORMATS_AMOUNT; i++) {
+								if (strcmp(stringFormat, validTimeFormats[i]) == 0) {
+									output.timeArray[0].dest = (TimeFormats)i;
+								}
+							}
+
+							if (output.timeArray[0].dest == UNKNOWN) {
+								invalidArgs = true;
+								break;
+							}
+						} else if (argc > 3) {
+							invalidArgs = true;
+							break;
+						}
+
+						break;
 
 					default:
 						invalidArgs = true;
@@ -81,8 +111,6 @@ int main(int argc, char* argv[]) {
 	ActionStruct actionStruct = arg_handler(argv, argc);
 
 	ActionResult result = executeAction(actionStruct);
-
-	printf("DATE : %u/%u/%hd @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.date.DAY, actionStruct.timeArray[0].timeStruct.date.MONTH, actionStruct.timeArray[0].timeStruct.date.YEAR, actionStruct.timeArray[0].timeStruct.timeOfDay.HOUR, actionStruct.timeArray[0].timeStruct.timeOfDay.MINUTE, actionStruct.timeArray[0].timeStruct.timeOfDay.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
 
 	switch (actionStruct.action) {
 		case CONVERSION:

@@ -2,7 +2,7 @@
 
 #include "CalendarTypes.h"
 
-#define MODES_AMOUNT 3
+#define MODES_AMOUNT 4
 
 extern const char helpMessage[];
 extern char* validTimeFormats[];
