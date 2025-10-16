@@ -158,6 +158,34 @@ TimeStruct parseTime(char* timeString, TimeFormats format) {
 	return output;
 }
 
+TimeStruct extractFromCompleteTimeStruct(CompleteTimeStruct completeTime, TimeFormats format) {
+	DateStruct dateStructs[3] = {
+		completeTime.GregDate, completeTime.JulianDate, completeTime.HijriDate
+	};
+
+	TimeStruct time_struct = {};
+
+	if ((GREGORIAN_CAL <= format) && (format <= HIJRI_CAL)) {
+		time_struct.date = dateStructs[format];
+		time_struct.timeOfDay = completeTime.timeOfDay;
+	} else {
+		switch (format) {
+			case JULIAN_DAY:
+				time_struct.JD = completeTime.JD;
+				break;
+
+			case UNIX_TIME:
+				time_struct.TIMESTAMP = completeTime.TIMESTAMP;
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	return time_struct;
+}
+
 InputTime parseConverter(char* argv[], int argc) {
 	/*
 		IF SOURCE_FORMAT IN ("JD", "UT") THEN
