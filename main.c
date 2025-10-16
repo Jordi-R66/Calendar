@@ -83,6 +83,25 @@ int main(int argc, char* argv[]) {
 
 	printf("DATE : %u/%u/%hd @ %u:%u:%u\nUNIX : %ld\nJDAY : %.5f\n", actionStruct.timeArray[0].timeStruct.date.DAY, actionStruct.timeArray[0].timeStruct.date.MONTH, actionStruct.timeArray[0].timeStruct.date.YEAR, actionStruct.timeArray[0].timeStruct.timeOfDay.HOUR, actionStruct.timeArray[0].timeStruct.timeOfDay.MINUTE, actionStruct.timeArray[0].timeStruct.timeOfDay.SECONDS, actionStruct.timeArray[0].timeStruct.TIMESTAMP, actionStruct.timeArray[0].timeStruct.JD);
 
+	switch (actionStruct.action) {
+		case CONVERSION:
+			TimeFormats srcFormat, destFormat;
+			InputTime time = actionStruct.timeArray[0];
+
+			srcFormat = time.source;
+			destFormat = time.dest;
+
+			if (destFormat == UNKNOWN) {
+				printCompleteTimeStruct(result.result);
+			} else {
+				TimeStruct time_struct = extractFromCompleteTimeStruct(result.result, time.dest);
+				printTimeStruct(time_struct, time.dest);
+			}
+
+		default:
+			break;
+	}
+
 	FILE* fp = fopen("result.bin", "w");
 	fwrite(&result, ACTIONRESULT_SIZE, 1, fp);
 	fclose(fp);
