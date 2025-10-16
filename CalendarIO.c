@@ -361,3 +361,16 @@ void printTimeStruct(TimeStruct time, TimeFormats format) {
 		}
 	}
 }
+
+void printCompleteTimeStruct(CompleteTimeStruct completeTime) {
+	DateStruct dateStructs[3] = {
+		completeTime.GregDate, completeTime.JulianDate, completeTime.HijriDate
+	};
+
+	for (TimeFormats format = GREGORIAN_CAL; format <= UNIX_TIME; format++) {
+		TimeStruct time_struct = extractFromCompleteTimeStruct(completeTime, format);
+
+		printTimeStruct(time_struct, format);
+		fprintf(stdout, "\n");
+	}
+}

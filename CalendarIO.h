@@ -17,3 +17,4 @@ InputTime parseConverter(char* argv[], int argc);
 void parseDifference(char* argv[], int argc, InputTime timeArray[2]);
 
 void printTimeStruct(TimeStruct date, TimeFormats format);
+void printCompleteTimeStruct(CompleteTimeStruct completeTime);
