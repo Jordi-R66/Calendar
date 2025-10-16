@@ -2,8 +2,6 @@
 
 #include <math.h>
 
-const uint64_t NAN_INT = 0b0111111111110000000000000000000000000000000000000000000000000001L;
-
 const TimeStruct UNIX_0_TS_GC = {
 	.date={.YEAR = 1970, .MONTH = 1, .DAY = 1}
 };
@@ -30,14 +28,14 @@ JulianDay TimeToDayFrac(TimeOfDay timeOfDay) {
 		S = timeOfDay.SECONDS;
 
 	if (H >= 24 || M >= 60 || S >= 60) {
-		return *(JulianDay*)&NAN_INT;
+		return nan("");
 	}
 
 	return (JulianDay)(H * 3600 + M * 60 + S) / 86400.0;
 }
 
 TimeOfDay DayFracToTime(JulianDay dayFrac) {
-	TimeStamp asSeconds = (TimeStamp)(dayFrac * 86400.0);
+	TimeStamp asSeconds = (TimeStamp)round(dayFrac * 86400.0);
 
 	uint8_t H, M, S;
 
