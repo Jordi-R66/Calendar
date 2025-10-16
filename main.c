@@ -23,9 +23,7 @@ ActionStruct arg_handler(char* argv[], int argc) {
 			if (strcmp(argv[1], validModeArgs[i]) == 0) {
 				switch (i) {
 					case 0:
-						output.action = CONVERSION;
-						output.timeArray[0] = parseConverter(parserArgV, parserArgC);
-						break;
+						printHelpMessage();
 
 					case 1:
 						output.action = DIFFERENCE;
@@ -34,11 +32,14 @@ ActionStruct arg_handler(char* argv[], int argc) {
 
 						parseDifference(parserArgV, parserArgC, timeArray);
 
-						memcpy(output.timeArray, timeArray, sizeof(timeArray));
+						memcpy(output.timeArray, timeArray, 2 * INPUTTIME_SIZE);
 						break;
 
 					case 2:
-						printHelpMessage();
+						output.action = CONVERSION;
+						output.timeArray[0] = parseConverter(parserArgV, parserArgC);
+						break;
+
 
 					default:
 						invalidArgs = true;
@@ -95,16 +96,14 @@ int main(int argc, char* argv[]) {
 				printCompleteTimeStruct(result.result);
 			} else {
 				TimeStruct time_struct = extractFromCompleteTimeStruct(result.result, time.dest);
+
 				printTimeStruct(time_struct, time.dest);
+				fprintf(stdout, "\n");
 			}
 
 		default:
 			break;
 	}
-
-	FILE* fp = fopen("result.bin", "w");
-	fwrite(&result, ACTIONRESULT_SIZE, 1, fp);
-	fclose(fp);
 
 	return EXIT_SUCCESS;
 }
