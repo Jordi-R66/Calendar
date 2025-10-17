@@ -51,6 +51,10 @@ ActionStruct arg_handler(char* argv[], int argc) {
 							.dest = UNKNOWN
 						};
 
+						struct tm* local_tm = localtime(&output.timeArray[0].timeStruct.TIMESTAMP);
+
+						output.timeArray[0].timeStruct.TIMESTAMP = timegm(local_tm);
+
 						if (argc == 3) {
 							char* stringFormat = argv[2];
 

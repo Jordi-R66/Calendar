@@ -175,7 +175,11 @@ JulianDay UNIXToJD(TimeStamp unix_time) {
 TimeStamp JulianDayToUNIX(JulianDay JD) {
 	JulianDay UNIX_0_JD = UNIXToJD(0);
 
-	return (TimeStamp)((JD - UNIX_0_JD) * 86400.0);
+	JulianDay DeltaJD = JD - UNIX_0_JD;
+
+	TimeStamp jdAsTimeStamp = (TimeStamp)round(FRAC(DeltaJD) * 86400.0) + 86400 * (TimeStamp)ENT(DeltaJD);
+
+	return jdAsTimeStamp;
 }
 
 // NORAD JULIAN DAY
