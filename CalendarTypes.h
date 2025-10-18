@@ -86,3 +86,6 @@ typedef struct ActionResult {
 #define ACTIONRESULT_SIZE sizeof(ActionResult)
 
 #define TIMEFORMATS_AMOUNT 5
+
+#define COMPARE_DS(ds1, ds2) ((ds1.YEAR == ds2.YEAR) && (ds1.MONTH == ds2.MONTH) && (ds1.DAY == ds2.DAY))
+#define COMPARE_TOD(tod1, tod2) ((tod1.HOUR == tod2.HOUR) && (tod1.MINUTE == tod2.MINUTE) && (tod1.SECONDS == tod2.SECONDS))
