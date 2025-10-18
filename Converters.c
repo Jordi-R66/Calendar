@@ -66,12 +66,12 @@ JulianDay GregToJD(TimeStruct timeStruct) {
 	double S = ENT((double)YEAR / 100.0);
 	double B = 2.0 - S + ENT(S / 4.0);
 
-	return ENT(365.25 * YEAR) + ENT(30.6001 * (MONTH + 1)) + DAY + TimeToDayFrac(timeStruct.timeOfDay) + B + 1720994.5;
+	return ENT(365.25 * YEAR) + ENT(30.6001 * (MONTH + 1)) + DAY + TimeToDayFrac(timeStruct.timeOfDay) + B + 1720994.5 + .5;
 }
 
 TimeStruct JulianDayToGreg(JulianDay JD) {
 	double Z = ENT(JD);
-	double F = FRAC(JD+.5);
+	double F = FRAC(JD);
 
 	double alpha = ENT((Z - 1867216.25) / 36524.25);
 	double S = Z + 1.0 + alpha - ENT(alpha / 4.0);
@@ -117,7 +117,7 @@ TimeStruct JulianDayToJulian(JulianDay JD) {
 	uint8_t MONTH = (uint8_t)ENT((5.0 * R2 + 461.0) / 153.0);
 	double R1 = R2 - ENT((153.0 * (JulianDay)MONTH - 457.0) / 5.0);
 
-	double Q = R1 + 1.0 +.5;
+	double Q = R1 + 1.0;
 	uint8_t DAY = (uint8_t)ENT(Q);
 
 	if (MONTH == 13 || MONTH == 14) {
@@ -141,7 +141,7 @@ JulianDay HijriToJD(TimeStruct timeStruct) {
 	uint16_t YEAR = timeStruct.date.YEAR;
 	uint8_t MONTH = timeStruct.date.MONTH, DAY = timeStruct.date.DAY;
 
-	return TRONQ((10631.0 * (JulianDay)YEAR + 58442583.0) / 30.0) + TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0) + (JulianDay)DAY + TimeToDayFrac(timeStruct.timeOfDay) - 1.0 - 0.5;
+	return TRONQ((10631.0 * (JulianDay)YEAR + 58442583.0) / 30.0) + TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0) + (JulianDay)DAY + TimeToDayFrac(timeStruct.timeOfDay) - 1.0;
 }
 
 TimeStruct JulianDayToHijri(JulianDay JD) {
@@ -151,7 +151,7 @@ TimeStruct JulianDayToHijri(JulianDay JD) {
 	uint8_t MONTH = (uint8_t)TRONQ((11.0 * R2 + 330.0) / 325.0);
 	double R1 = R2 - TRONQ((325.0 * (JulianDay)MONTH - 320.0) / 11.0);
 
-	double Q = R1 + 1.0 + .5;
+	double Q = R1 + 1.0;
 	uint8_t DAY = (uint8_t)ENT(Q);
 
 	TimeOfDay fracStruct = DayFracToTime(FRAC(Q));
