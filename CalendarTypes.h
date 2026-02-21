@@ -16,6 +16,7 @@ typedef enum TimeFormats {
 	HIJRI_CAL		= 2,
 	JULIAN_DAY		= 3,
 	UNIX_TIME		= 4,
+	NORAD_TIME		= 5,
 	UNKNOWN			= 255
 } TimeFormats;
 
@@ -45,7 +46,7 @@ typedef struct TimeStruct {
 
 	// UNIVERSAL
 	TimeStamp TIMESTAMP;
-	JulianDay JD;
+	JulianDay JD, Norad;
 } TimeStruct;
 
 typedef struct CompleteTimeStruct {
@@ -57,7 +58,7 @@ typedef struct CompleteTimeStruct {
 
 	// UNIVERSAL
 	TimeStamp TIMESTAMP;
-	JulianDay JD;
+	JulianDay JD, Norad;
 } CompleteTimeStruct;
 
 typedef struct InputTime {
@@ -85,7 +86,7 @@ typedef struct ActionResult {
 #define ACTIONSTRUCT_SIZE sizeof(ActionStruct)
 #define ACTIONRESULT_SIZE sizeof(ActionResult)
 
-#define TIMEFORMATS_AMOUNT 5
+#define TIMEFORMATS_AMOUNT 6
 
 #define COMPARE_DS(ds1, ds2) ((ds1.YEAR == ds2.YEAR) && (ds1.MONTH == ds2.MONTH) && (ds1.DAY == ds2.DAY))
 #define COMPARE_TOD(tod1, tod2) ((tod1.HOUR == tod2.HOUR) && (tod1.MINUTE == tod2.MINUTE) && (tod1.SECONDS == tod2.SECONDS))

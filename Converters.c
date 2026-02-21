@@ -3,7 +3,7 @@
 #include <math.h>
 
 const TimeStruct UNIX_0_TS_GC = {
-	.date={.YEAR = 1970, .MONTH = 1, .DAY = 1}
+	.date = {.YEAR = 1970, .MONTH = 1, .DAY = 1}
 };
 
 // NEEDED
@@ -52,7 +52,7 @@ TimeOfDay DayFracToTime(JulianDay dayFrac) {
 	return output;
 }
 
-// GREGORIAN CALENDAR
+#pragma region Gregorian Calendar
 
 JulianDay GregToJD(TimeStruct timeStruct) {
 	int16_t YEAR = timeStruct.date.YEAR;
@@ -89,14 +89,16 @@ TimeStruct JulianDayToGreg(JulianDay JD) {
 	TimeOfDay fracStruct = DayFracToTime(FRAC(F));
 
 	return (TimeStruct) {
-		.date = {YEAR, MONTH, DAY},
-		.timeOfDay = {fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS},
-		.JD = JD,
-		.TIMESTAMP = JulianDayToUNIX(JD)
+		.date = { YEAR, MONTH, DAY },
+			.timeOfDay = { fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS },
+			.JD = JD,
+			.TIMESTAMP = JulianDayToUNIX(JD)
 	};
 }
 
-// JULIAN
+#pragma endregion
+
+#pragma region Julian Calendar
 
 JulianDay JulianToJD(TimeStruct timeStruct) {
 	int16_t YEAR = timeStruct.date.YEAR;
@@ -128,14 +130,16 @@ TimeStruct JulianDayToJulian(JulianDay JD) {
 	TimeOfDay fracStruct = DayFracToTime(FRAC(Q));
 
 	return (TimeStruct) {
-		.date = {YEAR, MONTH, DAY},
-		.timeOfDay = {fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS},
-		.JD = JD,
-		.TIMESTAMP = JulianDayToUNIX(JD)
+		.date = { YEAR, MONTH, DAY },
+			.timeOfDay = { fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS },
+			.JD = JD,
+			.TIMESTAMP = JulianDayToUNIX(JD)
 	};
 }
 
-// HIJRI CALENDAR
+#pragma endregion
+
+#pragma region Hijri Calendar
 
 JulianDay HijriToJD(TimeStruct timeStruct) {
 	uint16_t YEAR = timeStruct.date.YEAR;
@@ -157,14 +161,16 @@ TimeStruct JulianDayToHijri(JulianDay JD) {
 	TimeOfDay fracStruct = DayFracToTime(FRAC(Q));
 
 	return (TimeStruct) {
-		.date = {YEAR, MONTH, DAY},
-		.timeOfDay = {fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS},
-		.JD = JD,
-		.TIMESTAMP = JulianDayToUNIX(JD)
+		.date = { YEAR, MONTH, DAY },
+			.timeOfDay = { fracStruct.HOUR, fracStruct.MINUTE, fracStruct.SECONDS },
+			.JD = JD,
+			.TIMESTAMP = JulianDayToUNIX(JD)
 	};
 }
 
-// UNIX TIMESTAMP
+#pragma endregion
+
+#pragma region Unix Timestamp
 
 JulianDay UNIXToJD(TimeStamp unix_time) {
 	JulianDay output = GregToJD(UNIX_0_TS_GC);
@@ -182,25 +188,51 @@ TimeStamp JulianDayToUNIX(JulianDay JD) {
 	return jdAsTimeStamp;
 }
 
-// NORAD JULIAN DAY
+#pragma endregion
 
-JulianDay NORADToJD(JulianDay norad, bool cropped) {
-	int16_t year = 0;
-	JulianDay day = fmod(norad, 1000.0);
+#pragma region Norad Timestamp
 
-	year = ((uint32_t)norad - (uint32_t)day) / 1000;
+JulianDay NoradToJD(JulianDay norad) {
+	JulianDay JD = 0.0, tempJD = norad - 1.0;
+	uint32_t int_jd = (uint32_t)norad - 1;
 
-	if (cropped) {
-		year += year < 57 ? 2000 : 1900;
-	}
+	int16_t year = ((int16_t)int_jd) / 1000;
 
-	TimeStruct gregYear = {
-		.date = {year, 1, 1},
-		.timeOfDay = {0, 0, 0}};
-	JulianDay JD = GregToJD(gregYear) + day - 0.5;
+	tempJD -= (double)(year * 1000);
+	year += (year < 57) ? 2000 : 1900;
+
+	TimeStruct temp = {
+		.date = {.DAY = 1, .MONTH = 1, .YEAR = year},
+		.timeOfDay = {.HOUR = 0.0, .MINUTE = 0.0, .SECONDS = 0.0},
+		.JD = 0.0,
+		.TIMESTAMP = 0,
+		.Norad = 0.0
+	};
+
+	JD += GregToJD(temp) + tempJD;
 
 	return JD;
 }
+
+JulianDay JulianDayToNorad(JulianDay JD) {
+	JulianDay norad = 1.0;
+
+	TimeStruct greg = JulianDayToGreg(JD);
+	TimeStruct temp = {
+		.date = {.DAY = 1, .MONTH = 1, .YEAR = greg.date.YEAR},
+		.timeOfDay = {.HOUR = 0.0, .MINUTE = 0.0, .SECONDS = 0.0},
+		.JD = 0.0,
+		.TIMESTAMP = 0,
+		.Norad = 0.0
+	};
+
+	double year = (double)(greg.date.YEAR % 100) * 1000.0;
+
+	norad += year + (JD - GregToJD(temp));
+
+	return norad;
+}
+
 
 CompleteTimeStruct JulianDayToAny(JulianDay JD, TimeFormats target) {
 	CompleteTimeStruct output;
@@ -237,9 +269,13 @@ CompleteTimeStruct JulianDayToAny(JulianDay JD, TimeFormats target) {
 			output.TIMESTAMP = JulianDayToUNIX(JD);
 			break;
 
-		default:
-			exit(EXIT_FAILURE);
+		case NORAD_TIME:
+			output.Norad = JulianDayToNorad(JD);
 			break;
+
+	default:
+		exit(EXIT_FAILURE);
+		break;
 	}
 
 	if (target < 3) {
@@ -258,61 +294,69 @@ CompleteTimeStruct generalConverter(TimeStruct sourceTime, TimeFormats source, T
 	// Getting rid of the situation where source = target
 	if (source == target) {
 		switch (source) {
-			case GREGORIAN_CAL:
-				output.GregDate = sourceTime.date;
-				output.timeOfDay = sourceTime.timeOfDay;
-				break;
+		case GREGORIAN_CAL:
+			output.GregDate = sourceTime.date;
+			output.timeOfDay = sourceTime.timeOfDay;
+			break;
 
-			case JULIAN_CAL:
-				output.JulianDate = sourceTime.date;
-				output.timeOfDay = sourceTime.timeOfDay;
-				break;
+		case JULIAN_CAL:
+			output.JulianDate = sourceTime.date;
+			output.timeOfDay = sourceTime.timeOfDay;
+			break;
 
-			case HIJRI_CAL:
-				output.HijriDate = sourceTime.date;
-				output.timeOfDay = sourceTime.timeOfDay;
-				break;
+		case HIJRI_CAL:
+			output.HijriDate = sourceTime.date;
+			output.timeOfDay = sourceTime.timeOfDay;
+			break;
 
-			case UNIX_TIME:
-				output.TIMESTAMP = sourceTime.TIMESTAMP;
-				break;
+		case UNIX_TIME:
+			output.TIMESTAMP = sourceTime.TIMESTAMP;
+			break;
 
-			case JULIAN_DAY:
-				output.JD = sourceTime.JD;
-				break;
+		case JULIAN_DAY:
+			output.JD = sourceTime.JD;
+			break;
 
-			default:
-				exit(EXIT_FAILURE);
-				break;
+		case NORAD_TIME:
+			output.Norad = sourceTime.Norad;
+			break;
+
+		default:
+			exit(EXIT_FAILURE);
+			break;
 		}
 
 		return output;
 	}
 
 	switch (source) {
-		case GREGORIAN_CAL:
-			intermediate = GregToJD(sourceTime);
-			break;
+	case GREGORIAN_CAL:
+		intermediate = GregToJD(sourceTime);
+		break;
 
-		case JULIAN_CAL:
-			intermediate = JulianToJD(sourceTime);
-			break;
+	case JULIAN_CAL:
+		intermediate = JulianToJD(sourceTime);
+		break;
 
-		case HIJRI_CAL:
-			intermediate = HijriToJD(sourceTime);
-			break;
+	case HIJRI_CAL:
+		intermediate = HijriToJD(sourceTime);
+		break;
 
-		case UNIX_TIME:
-			intermediate = UNIXToJD(sourceTime.TIMESTAMP);
-			break;
+	case UNIX_TIME:
+		intermediate = UNIXToJD(sourceTime.TIMESTAMP);
+		break;
 
-		case JULIAN_DAY:
-			intermediate = sourceTime.JD;
-			break;
+	case JULIAN_DAY:
+		intermediate = sourceTime.JD;
+		break;
 
-		default:
-			exit(EXIT_FAILURE);
-			break;
+	case NORAD_TIME:
+		intermediate = NoradToJD(sourceTime.Norad);
+		break;
+
+	default:
+		exit(EXIT_FAILURE);
+		break;
 	}
 
 	for (TimeFormats format = 0; format < TIMEFORMATS_AMOUNT; format++) {
@@ -321,34 +365,39 @@ CompleteTimeStruct generalConverter(TimeStruct sourceTime, TimeFormats source, T
 		if ((target != UNKNOWN) && (format == target)) {
 			output = temp;
 			break;
-		} else if (target == UNKNOWN) {
+		}
+		else if (target == UNKNOWN) {
 			switch (format) {
-				case GREGORIAN_CAL:
-					output.GregDate = temp.GregDate;
-					output.timeOfDay = temp.timeOfDay;
-					break;
+			case GREGORIAN_CAL:
+				output.GregDate = temp.GregDate;
+				output.timeOfDay = temp.timeOfDay;
+				break;
 
-				case JULIAN_CAL:
-					output.JulianDate = temp.JulianDate;
-					output.timeOfDay = temp.timeOfDay;
-					break;
+			case JULIAN_CAL:
+				output.JulianDate = temp.JulianDate;
+				output.timeOfDay = temp.timeOfDay;
+				break;
 
-				case HIJRI_CAL:
-					output.HijriDate = temp.HijriDate;
-					output.timeOfDay = temp.timeOfDay;
-					break;
+			case HIJRI_CAL:
+				output.HijriDate = temp.HijriDate;
+				output.timeOfDay = temp.timeOfDay;
+				break;
 
-				case JULIAN_DAY:
-					output.JD = temp.JD;
-					break;
+			case JULIAN_DAY:
+				output.JD = temp.JD;
+				break;
 
-				case UNIX_TIME:
-					output.TIMESTAMP = temp.TIMESTAMP;
-					break;
+			case UNIX_TIME:
+				output.TIMESTAMP = temp.TIMESTAMP;
+				break;
 
-				default:
-					exit(EXIT_FAILURE);
-					break;
+			case NORAD_TIME:
+				output.Norad = temp.Norad;
+				break;
+
+			default:
+				exit(EXIT_FAILURE);
+				break;
 			}
 		}
 	}

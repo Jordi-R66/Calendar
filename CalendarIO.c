@@ -3,7 +3,7 @@
 const char helpMessage[] = "The right syntax for this program is the following :\n\n  DIFFERENCE :\n    prog -d FORMAT_A TIME_A FORMAT_B TIME_B\n\n  CONVERSION :\n    prog -c SOURCE_FORMAT TIME (TARGET_FORMAT)\n\nSYNTAX FOR TIME :\nIf the selected format (or calendar) is either \"JD\" either \"UT\" the TIME argument will be an Integer for UT and a double-precision floating point number for JD.\nFor every other calendar TIME is ALWAYS composed of two separate arguments :\n  The first one is the date written as DD/MM/YYYY and the other one is the time of the day as hh:mm:ss using a 24hr format\n";
 
 char* validTimeFormats[] = {
-	"GC", "JC", "HC", "JD", "UT"
+	"GC", "JC", "HC", "JD", "UT", "ND"
 };
 
 void printHelpMessage(void) {
@@ -149,6 +149,10 @@ TimeStruct parseTime(char* timeString, TimeFormats format) {
 			output.TIMESTAMP = strtol(timeString, &endptr, 10);
 			break;
 
+		case NORAD_TIME:
+			output.Norad = strtod(timeString, &endptr);
+			break;
+
 		default:
 			fprintf(stderr, "An error happened.\n");
 			exit(EXIT_FAILURE);
@@ -176,6 +180,10 @@ TimeStruct extractFromCompleteTimeStruct(CompleteTimeStruct completeTime, TimeFo
 
 			case UNIX_TIME:
 				time_struct.TIMESTAMP = completeTime.TIMESTAMP;
+				break;
+
+			case NORAD_TIME:
+				time_struct.Norad = completeTime.Norad;
 				break;
 
 			default:
@@ -327,7 +335,7 @@ void parseDifference(char* argv[], int argc, InputTime timeArray[2]) {
 
 void printTimeStruct(TimeStruct time, TimeFormats format) {
 	char* formatString;
-	if ((GREGORIAN_CAL <= format) && (format <= UNIX_TIME)) {
+	if ((GREGORIAN_CAL <= format) && (format <= NORAD_TIME)) {
 		formatString = validTimeFormats[format];
 	} else {
 		return;
@@ -344,7 +352,7 @@ void printTimeStruct(TimeStruct time, TimeFormats format) {
 		second = time.timeOfDay.SECONDS;
 
 		fprintf(stdout, "DATE %s: %u/%u/%hd @ %u:%u:%u", formatString, day, month, year, hour, minute, second);
-	} else if ((JULIAN_DAY <= format) && (format <= UNIX_TIME)) {
+	} else if ((JULIAN_DAY <= format) && (format <= NORAD_TIME)) {
 		switch (format) {
 			case JULIAN_DAY:
 				JulianDay jd = time.JD;
@@ -354,6 +362,11 @@ void printTimeStruct(TimeStruct time, TimeFormats format) {
 			case UNIX_TIME:
 				TimeStamp ut = time.TIMESTAMP;
 				fprintf(stdout, "TIME %s: %ld", formatString, ut);
+				break;
+
+			case NORAD_TIME:
+				JulianDay norad = time.Norad;
+				fprintf(stdout, "TIME %s: %014.8f", formatString, norad);
 				break;
 
 			default:
@@ -367,7 +380,7 @@ void printCompleteTimeStruct(CompleteTimeStruct completeTime) {
 		completeTime.GregDate, completeTime.JulianDate, completeTime.HijriDate
 	};
 
-	for (TimeFormats format = GREGORIAN_CAL; format <= UNIX_TIME; format++) {
+	for (TimeFormats format = GREGORIAN_CAL; format <= NORAD_TIME; format++) {
 		TimeStruct time_struct = extractFromCompleteTimeStruct(completeTime, format);
 
 		printTimeStruct(time_struct, format);

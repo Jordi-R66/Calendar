@@ -23,7 +23,7 @@ JulianDay UNIXToJD(TimeStamp unix_time);
 TimeStamp JulianDayToUNIX(JulianDay JD);
 
 // NORAD
-JulianDay NORADToJD(JulianDay norad, bool cropped);
-JulianDay JDToNORAD(JulianDay JD, bool cropped);
+JulianDay NoradToJD(JulianDay norad);
+JulianDay JulianDayToNorad(JulianDay JD);
 
 CompleteTimeStruct generalConverter(TimeStruct sourceTime, TimeFormats source, TimeFormats target);
