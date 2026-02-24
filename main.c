@@ -28,7 +28,7 @@ ActionStruct arg_handler(char* argv[], int argc) {
 						printHelpMessage();
 
 					case 1:
-						output.action = DIFFERENCE;
+						output.action = DIFF;
 
 						InputTime timeArray[2];
 

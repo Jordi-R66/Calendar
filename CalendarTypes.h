@@ -21,7 +21,7 @@ typedef enum TimeFormats {
 } TimeFormats;
 
 typedef enum Actions {
-	DIFFERENCE	= 0,
+	DIFF	= 0,
 	CONVERSION	= 1,
 	NOW			= 2
 } Actions;
